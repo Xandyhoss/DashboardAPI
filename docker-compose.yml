@@ -9,6 +9,6 @@ services:
     restart: always
     environment:
       MYSQL_ROOT_PASSWORD: 'secret'
-      MYSQL_DATABASE: 'dashboard'
+      MYSQL_DATABASE: 'dashboard_api'
     ports:
       - '3306:3306'
