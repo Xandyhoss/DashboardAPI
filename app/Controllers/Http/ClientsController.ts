@@ -1,6 +1,6 @@
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import Client from 'App/Models/Client'
-import { CreateValidator, UpdateValidator } from 'App/Validators/Client'
+import { StoreValidator, UpdateValidator } from 'App/Validators/Client'
 
 export default class ClientsController {
   public async index({}: HttpContextContract) {
@@ -9,17 +9,26 @@ export default class ClientsController {
   }
 
   public async store({ request }: HttpContextContract) {
-    const data = await request.validate(CreateValidator)
+    const data = await request.validate(StoreValidator)
     const client = await Client.create(data)
     return client
   }
 
   public async show({ params, response }: HttpContextContract) {
     const client = await Client.find(params.id)
+    await client?.load('addresses')
     if (!client) {
       return response.notFound({ message: 'Usuário não encontrado' })
     }
-    return client
+    return client.serialize({
+      relations: {
+        addresses: {
+          fields: {
+            omit: ['createdAt', 'updatedAt', 'clientId'],
+          },
+        },
+      },
+    })
   }
 
   public async update({ request, params }: HttpContextContract) {
