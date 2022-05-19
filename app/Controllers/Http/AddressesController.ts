@@ -18,7 +18,19 @@ export default class AddressesController {
     })
   }
 
-  public async update({}: HttpContextContract) {}
+  public async update({ params, request }: HttpContextContract) {
+    const address = await Address.findOrFail(params.id)
+    const data = await request.validate(UpdateValidator)
+    address.merge(data)
+    await address.save()
 
-  public async destroy({}: HttpContextContract) {}
+    return address
+  }
+
+  public async destroy({ params }: HttpContextContract) {
+    const address = await Address.findOrFail(params.id)
+    address.delete()
+
+    return 'Address deleted!'
+  }
 }
