@@ -19,6 +19,10 @@ export default class AuthController {
     return token
   }
 
+  public async logged({ auth }: HttpContextContract) {
+    return await auth.check()
+  }
+
   public async logout({ auth }: HttpContextContract) {
     await auth.logout()
     return 'Deleted'

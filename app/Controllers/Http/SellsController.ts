@@ -1,7 +1,7 @@
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import Database from '@ioc:Adonis/Lucid/Database'
 import Sell from 'App/Models/Sell'
-import { StoreValidator } from 'App/Validators/Sells'
+import { StoreValidator, UpdateValidator } from 'App/Validators/Sells'
 
 export default class SellsController {
   public async index({}: HttpContextContract) {}
@@ -24,6 +24,14 @@ export default class SellsController {
       await sell.load((loader) => {
         loader.load('products').load('client').load('address')
       })
+
+      const value = sell.products.reduce((accumulator, product) => {
+        return accumulator + product.valorVenda
+      }, 0)
+
+      sell.value = value
+
+      await sell.save()
 
       return sell
     })
@@ -59,7 +67,13 @@ export default class SellsController {
     })
   }
 
-  public async update({}: HttpContextContract) {}
+  public async update({ request, params }: HttpContextContract) {
+    const sell = await Sell.findOrFail(params.id)
+    const data = await request.validate(UpdateValidator)
+    sell.merge(data)
+    await sell.save()
+    return sell
+  }
 
   public async destroy({}: HttpContextContract) {}
 }

@@ -38,6 +38,9 @@ export default class Sell extends BaseModel {
   })
   public products: ManyToMany<typeof Product>
 
+  @column()
+  public value: number
+
   @column.dateTime({ autoCreate: true })
   public createdAt: DateTime
 

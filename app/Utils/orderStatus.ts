@@ -5,7 +5,7 @@ const orderStatus = [
   'delivered',
   'canceled',
   'finished',
-]
+] as const
 
 type OrderStatus = typeof orderStatus[number]
 
