@@ -7,6 +7,7 @@ export class UpdateValidator {
     endereco: schema.string.optional({ trim: true }),
     numero: schema.number.optional(),
     bairro: schema.string.optional({ trim: true }),
+    cidade: schema.string({ trim: true }),
     cep: schema.string.optional({ trim: true }),
     complemento: schema.string.optional({ trim: true }),
     referencia: schema.string.optional({ trim: true }),

@@ -28,6 +28,9 @@ export default class Address extends BaseModel {
   public complemento: string
 
   @column()
+  public cidade: string
+
+  @column()
   public referencia: string
 
   @column.dateTime({ autoCreate: true })

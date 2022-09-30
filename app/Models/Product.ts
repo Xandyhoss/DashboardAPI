@@ -1,5 +1,6 @@
 import { DateTime } from 'luxon'
-import { BaseModel, column } from '@ioc:Adonis/Lucid/Orm'
+import { BaseModel, column, ManyToMany, manyToMany } from '@ioc:Adonis/Lucid/Orm'
+import Sell from './Sell'
 
 export default class Product extends BaseModel {
   @column({ isPrimary: true })
@@ -14,8 +15,12 @@ export default class Product extends BaseModel {
   @column()
   public valorVenda: number
 
-  @column()
-  public vendas: number
+  @manyToMany(() => Sell, {
+    pivotTable: 'pivot_sells',
+    pivotForeignKey: 'product_id',
+    pivotRelatedForeignKey: 'sell_id',
+  })
+  public vendas: ManyToMany<typeof Sell>
 
   @column()
   public link: string

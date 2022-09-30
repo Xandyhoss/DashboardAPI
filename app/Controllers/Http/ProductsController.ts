@@ -4,7 +4,7 @@ import { StoreValidator, UpdateValidator } from 'App/Validators/Products'
 
 export default class ProductsController {
   public async index({}: HttpContextContract) {
-    const products = await Product.all()
+    const products = await Product.query().preload('vendas')
     const productsJSON = products.map((product) => {
       return product.serialize({
         fields: {
@@ -24,6 +24,7 @@ export default class ProductsController {
 
   public async show({ params }: HttpContextContract) {
     const product = await Product.findOrFail(params.id)
+    await product.load('vendas')
     return product
   }
 

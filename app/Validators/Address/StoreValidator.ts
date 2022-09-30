@@ -8,6 +8,7 @@ export class StoreValidator {
     endereco: schema.string({ trim: true }),
     numero: schema.number(),
     bairro: schema.string({ trim: true }),
+    cidade: schema.string({ trim: true }),
     cep: schema.string({ trim: true }),
     complemento: schema.string.optional({ trim: true }),
     referencia: schema.string.optional({ trim: true }),

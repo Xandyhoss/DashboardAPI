@@ -4,7 +4,7 @@ import { StoreValidator, UpdateValidator } from 'App/Validators/Client'
 
 export default class ClientsController {
   public async index({}: HttpContextContract) {
-    const clients = await Client.all()
+    const clients = await Client.query().preload('addresses').preload('compras')
     return clients
   }
 
@@ -16,7 +16,9 @@ export default class ClientsController {
 
   public async show({ params, response }: HttpContextContract) {
     const client = await Client.find(params.id)
-    await client?.load('addresses')
+    await client?.load((loader) => {
+      loader.load('addresses').load('compras')
+    })
     if (!client) {
       return response.notFound({ message: 'Usuário não encontrado' })
     }

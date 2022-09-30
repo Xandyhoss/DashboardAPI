@@ -1,6 +1,7 @@
 import { DateTime } from 'luxon'
 import { BaseModel, column, HasMany, hasMany } from '@ioc:Adonis/Lucid/Orm'
 import Address from './Address'
+import Sell from './Sell'
 
 export default class Client extends BaseModel {
   @column({ isPrimary: true })
@@ -23,4 +24,7 @@ export default class Client extends BaseModel {
 
   @hasMany(() => Address)
   public addresses: HasMany<typeof Address>
+
+  @hasMany(() => Sell)
+  public compras: HasMany<typeof Sell>
 }

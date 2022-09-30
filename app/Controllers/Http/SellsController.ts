@@ -4,7 +4,10 @@ import Sell from 'App/Models/Sell'
 import { StoreValidator, UpdateValidator } from 'App/Validators/Sells'
 
 export default class SellsController {
-  public async index({}: HttpContextContract) {}
+  public async index({}: HttpContextContract) {
+    const sells = await Sell.all()
+    return sells
+  }
 
   public async store({ request }: HttpContextContract) {
     const sell = await Database.transaction(async (trx) => {
@@ -14,10 +17,9 @@ export default class SellsController {
 
       sell.clientId = data.clientId
       sell.addressId = data.addressId
+      const products = data.productsIds
 
       await sell.save()
-
-      const products = data.productsIds
 
       await sell.related('products').attach(products)
 
