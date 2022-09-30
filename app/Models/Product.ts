@@ -1,6 +1,14 @@
 import { DateTime } from 'luxon'
-import { BaseModel, column, ManyToMany, manyToMany } from '@ioc:Adonis/Lucid/Orm'
+import {
+  BaseModel,
+  BelongsTo,
+  belongsTo,
+  column,
+  ManyToMany,
+  manyToMany,
+} from '@ioc:Adonis/Lucid/Orm'
 import Sell from './Sell'
+import Entity from './Entity'
 
 export default class Product extends BaseModel {
   @column({ isPrimary: true })
@@ -24,6 +32,9 @@ export default class Product extends BaseModel {
 
   @column()
   public link: string
+
+  @belongsTo(() => Entity)
+  public entity: BelongsTo<typeof Entity>
 
   @column.dateTime({ autoCreate: true })
   public createdAt: DateTime

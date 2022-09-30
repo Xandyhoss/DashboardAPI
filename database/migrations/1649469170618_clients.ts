@@ -9,6 +9,13 @@ export default class Clients extends BaseSchema {
       table.string('nome').notNullable()
       table.string('cpf').unique()
       table.string('telefone')
+      table
+        .string('entity_id')
+        .references('id')
+        .inTable('entities')
+        .onDelete('CASCADE')
+        .onUpdate('CASCADE')
+        .unsigned()
       table.timestamp('created_at', { useTz: true })
       table.timestamp('updated_at', { useTz: true })
     })

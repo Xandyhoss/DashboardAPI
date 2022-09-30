@@ -11,6 +11,13 @@ export default class Products extends BaseSchema {
       table.float('valor_venda')
       table.integer('vendas').defaultTo(0)
       table.text('link', 'longtext')
+      table
+        .string('entity_id')
+        .references('id')
+        .inTable('entities')
+        .onDelete('CASCADE')
+        .onUpdate('CASCADE')
+        .unsigned()
       table.timestamp('created_at', { useTz: true })
       table.timestamp('updated_at', { useTz: true })
     })

@@ -11,6 +11,7 @@ import { OrderStatus } from 'App/Utils'
 import Product from './Product'
 import Client from './Client'
 import Address from './Address'
+import Entity from './Entity'
 
 export default class Sell extends BaseModel {
   @column({ isPrimary: true })
@@ -40,6 +41,9 @@ export default class Sell extends BaseModel {
 
   @column()
   public value: number
+
+  @belongsTo(() => Entity)
+  public entity: BelongsTo<typeof Entity>
 
   @column.dateTime({ autoCreate: true })
   public createdAt: DateTime

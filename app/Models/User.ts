@@ -1,7 +1,7 @@
 import { DateTime } from 'luxon'
 import Hash from '@ioc:Adonis/Core/Hash'
-import { BaseModel, beforeSave, column, HasMany, hasMany } from '@ioc:Adonis/Lucid/Orm'
-import Address from './Address'
+import { BaseModel, beforeSave, BelongsTo, belongsTo, column } from '@ioc:Adonis/Lucid/Orm'
+import Entity from './Entity'
 
 export default class User extends BaseModel {
   @column({ isPrimary: true })
@@ -12,6 +12,9 @@ export default class User extends BaseModel {
 
   @column({ serializeAs: null })
   public password: string
+
+  @belongsTo(() => Entity)
+  public entity: BelongsTo<typeof Entity>
 
   @column.dateTime({ autoCreate: true })
   public createdAt: DateTime
@@ -25,7 +28,4 @@ export default class User extends BaseModel {
       user.password = await Hash.make(user.password)
     }
   }
-
-  @hasMany(() => Address)
-  public address: HasMany<typeof Address>
 }
