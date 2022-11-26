@@ -4,17 +4,20 @@ import Sell from 'App/Models/Sell'
 import { StoreValidator, UpdateValidator } from 'App/Validators/Sells'
 
 export default class SellsController {
-  public async index({}: HttpContextContract) {
-    const sells = await Sell.all()
+  public async index({ auth }: HttpContextContract) {
+    const entityId = await auth.user?.entityId
+    const sells = await Sell.query().where('entity_id', entityId!)
     return sells
   }
 
-  public async store({ request }: HttpContextContract) {
+  public async store({ auth, request }: HttpContextContract) {
     const sell = await Database.transaction(async (trx) => {
+      const entityId = await auth.user?.entityId
       const data = await request.validate(StoreValidator)
       const sell = new Sell()
       sell.useTransaction(trx)
 
+      sell.entityId = entityId!
       sell.clientId = data.clientId
       sell.addressId = data.addressId
       const products = data.productsIds
@@ -40,8 +43,12 @@ export default class SellsController {
     return sell
   }
 
-  public async show({ params }: HttpContextContract) {
+  public async show({ auth, params }: HttpContextContract) {
+    const entityId = await auth.user?.entityId
     const sell = await Sell.findOrFail(params.id)
+    if (sell.entityId !== entityId) {
+      return 'Sell not found!'
+    }
     await sell.load((loader) => {
       loader.load('products').load('client').load('address')
     })
@@ -69,12 +76,16 @@ export default class SellsController {
     })
   }
 
-  public async update({ request, params }: HttpContextContract) {
+  public async update({ auth, request, params }: HttpContextContract) {
+    const entityId = await auth.user?.entityId
     const sell = await Sell.findOrFail(params.id)
     const data = await request.validate(UpdateValidator)
-    sell.merge(data)
-    await sell.save()
-    return sell
+    if (sell.entityId === entityId) {
+      await sell.merge(data)
+      await sell.save()
+      return sell
+    }
+    return 'Operation not allowed!'
   }
 
   public async destroy({}: HttpContextContract) {}

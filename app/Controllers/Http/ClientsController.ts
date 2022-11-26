@@ -3,23 +3,26 @@ import Client from 'App/Models/Client'
 import { StoreValidator, UpdateValidator } from 'App/Validators/Client'
 
 export default class ClientsController {
-  public async index({}: HttpContextContract) {
-    const clients = await Client.query().preload('addresses').preload('compras')
+  public async index({ auth }: HttpContextContract) {
+    const entityId = await auth.user?.entityId
+    const clients = await Client.query().where('entity_id', entityId!)
     return clients
   }
 
-  public async store({ request }: HttpContextContract) {
+  public async store({ auth, request }: HttpContextContract) {
+    const entityId = await auth.user?.entityId
     const data = await request.validate(StoreValidator)
-    const client = await Client.create(data)
+    const client = await Client.create({ ...data, entityId })
     return client
   }
 
-  public async show({ params, response }: HttpContextContract) {
+  public async show({ auth, params, response }: HttpContextContract) {
+    const entityId = await auth.user?.entityId
     const client = await Client.find(params.id)
     await client?.load((loader) => {
       loader.load('addresses').load('compras')
     })
-    if (!client) {
+    if (!client || client.entityId !== entityId) {
       return response.notFound({ message: 'Usuário não encontrado' })
     }
     return client.serialize({
@@ -33,17 +36,25 @@ export default class ClientsController {
     })
   }
 
-  public async update({ request, params }: HttpContextContract) {
+  public async update({ request, params, auth }: HttpContextContract) {
+    const entityId = await auth.user?.entityId
     const client = await Client.findOrFail(params.id)
     const data = await request.validate(UpdateValidator)
-    client.merge(data)
-    await client.save()
-    return client
+    if (client.entityId === entityId) {
+      await client.merge(data)
+      await client.save()
+      return client
+    }
+    return 'Operation not allowed!'
   }
 
-  public async destroy({ params }: HttpContextContract) {
+  public async destroy({ params, auth }: HttpContextContract) {
+    const entityId = await auth.user?.entityId
     const client = await Client.findOrFail(params.id)
-    await client.delete()
-    return 'Deleted!'
+    if (client.entityId === entityId) {
+      await client.delete()
+      return 'Deleted!'
+    }
+    return 'Client out of range!'
   }
 }

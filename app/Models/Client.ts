@@ -17,6 +17,9 @@ export default class Client extends BaseModel {
   @column()
   public telefone: string
 
+  @column()
+  public entityId: string
+
   @belongsTo(() => Entity)
   public entity: BelongsTo<typeof Entity>
 

@@ -42,6 +42,9 @@ export default class Sell extends BaseModel {
   @column()
   public value: number
 
+  @column()
+  public entityId: string
+
   @belongsTo(() => Entity)
   public entity: BelongsTo<typeof Entity>
 

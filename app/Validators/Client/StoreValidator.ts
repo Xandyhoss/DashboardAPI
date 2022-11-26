@@ -3,16 +3,25 @@ import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 
 export class StoreValidator {
   constructor(protected ctx: HttpContextContract) {}
+
+  public refs = schema.refs({
+    entityId: this.ctx.auth.user?.entityId,
+  })
+
   public schema = schema.create({
     nome: schema.string({ trim: true }, [rules.required()]),
     telefone: schema.string({ trim: true }, [
       rules.minLength(10),
       rules.maxLength(11),
       rules.required(),
-      rules.unique({ table: 'clients', column: 'telefone' }),
+      rules.unique({
+        table: 'clients',
+        column: 'telefone',
+        where: { entity_id: this.refs.entityId },
+      }),
     ]),
     cpf: schema.string({ trim: true }, [
-      rules.unique({ table: 'clients', column: 'cpf' }),
+      rules.unique({ table: 'clients', column: 'cpf', where: { entity_id: this.refs.entityId } }),
       rules.required(),
       rules.maxLength(11),
       rules.minLength(11),

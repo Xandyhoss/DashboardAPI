@@ -33,6 +33,9 @@ export default class Product extends BaseModel {
   @column()
   public link: string
 
+  @column()
+  public entityId: string
+
   @belongsTo(() => Entity)
   public entity: BelongsTo<typeof Entity>
 

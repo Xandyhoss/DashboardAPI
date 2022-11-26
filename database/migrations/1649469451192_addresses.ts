@@ -13,6 +13,7 @@ export default class Addresses extends BaseSchema {
         .onDelete('CASCADE')
         .onUpdate('CASCADE')
         .unsigned()
+      table.string('entity_id').references('entities.id').onDelete('CASCADE').onUpdate('CASCADE')
       table.string('endereco').notNullable()
       table.string('numero')
       table.string('bairro').notNullable()

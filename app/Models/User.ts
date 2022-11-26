@@ -13,6 +13,9 @@ export default class User extends BaseModel {
   @column({ serializeAs: null })
   public password: string
 
+  @column({})
+  public entityId: string
+
   @belongsTo(() => Entity)
   public entity: BelongsTo<typeof Entity>
 

@@ -1,6 +1,7 @@
 import { DateTime } from 'luxon'
 import { BaseModel, BelongsTo, belongsTo, column } from '@ioc:Adonis/Lucid/Orm'
 import Client from './Client'
+import Entity from './Entity'
 
 export default class Address extends BaseModel {
   @column({ isPrimary: true })
@@ -32,6 +33,12 @@ export default class Address extends BaseModel {
 
   @column()
   public referencia: string
+
+  @column()
+  public entityId: string
+
+  @belongsTo(() => Entity)
+  public entity: BelongsTo<typeof Entity>
 
   @column.dateTime({ autoCreate: true })
   public createdAt: DateTime
