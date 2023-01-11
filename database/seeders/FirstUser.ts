@@ -7,12 +7,12 @@ export default class FirstUserSeeder extends BaseSeeder {
       {
         username: 'Xande',
         password: 'senha',
-        entityId: '3fc92790-b084-4b9c-ae41-14b93301dc93',
+        entityId: '11117ed8-db49-4666-99e4-5c370adb1288',
       },
       {
         username: 'Gustavo',
         password: 'Gustavo',
-        entityId: 'dbb89597-de77-45e1-aeb5-a00f397d64b9',
+        entityId: '32637089-e931-4148-9ca6-daf40e4f57ab',
       },
     ])
   }

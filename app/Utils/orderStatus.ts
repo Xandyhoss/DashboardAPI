@@ -1,7 +1,8 @@
 const orderStatus = [
-  'transit',
   'pending_payment',
+  'payment_confirmed',
   'waiting_shipment',
+  'transit',
   'delivered',
   'canceled',
   'finished',

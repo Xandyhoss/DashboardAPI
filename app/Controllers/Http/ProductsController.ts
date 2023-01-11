@@ -5,7 +5,7 @@ import { StoreValidator, UpdateValidator } from 'App/Validators/Products'
 export default class ProductsController {
   public async index({ auth }: HttpContextContract) {
     const entityId = await auth.user?.entityId
-    const products = await Product.query().where('entity_id', entityId!)
+    const products = await Product.query().where('entity_id', entityId!).preload('vendas')
     const productsJSON = products.map((product) => {
       return product.serialize({
         fields: {
